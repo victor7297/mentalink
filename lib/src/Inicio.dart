@@ -121,6 +121,8 @@ class _InicioState extends State<Inicio> {
                   ),
                 ),
               ),
+
+              Container(child: Text("hola"),),
               Container(
                 width: containerWidth,
                 height: containerHeight,
