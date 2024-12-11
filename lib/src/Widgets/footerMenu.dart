@@ -18,7 +18,9 @@ class _footerMenuState extends State<footerMenu> {
 
     return BottomNavigationBar(
         currentIndex: paginaActual,
-        //selectedItemColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        backgroundColor: Color.fromRGBO(10, 28, 92, 1),
         onTap: (value) {
 
           //print(value);

@@ -1,0 +1,1 @@
+ C:\\Users\\tepuy\\OneDrive\\Escritorio\\Flutter\\mentalink\\.dart_tool\\flutter_build\\1c95f4b8b76c33398afef7160eabb2a2\\native_assets.yaml: 

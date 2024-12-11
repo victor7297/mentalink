@@ -1,13 +1,20 @@
-// ignore_for_file: use_key_in_widget_constructors, sized_box_for_whitespace, prefer_const_constructors
+// ignore_for_file: sized_box_for_whitespace, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Footer extends StatelessWidget {
+  Future<String?> _getUserType() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('tipo_usuario');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 84.0, // Aumentamos la altura para dar más espacio
+      height: 65.0,
       child: BottomAppBar(
+        color: Color.fromRGBO(9, 25, 87, 1.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -15,15 +22,10 @@ class Footer extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(Icons.home),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed("/PantallaInicio");
+                    icon: Icon(Icons.home, size: 25, color: Colors.white),
+                    onPressed: () async {
+                      Navigator.of(context).pushNamed("/Home");
                     },
-                  ),
-                  Text(
-                    'Inicio',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -32,15 +34,10 @@ class Footer extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(Icons.event),
+                    icon: Icon(Icons.calendar_month_sharp, size: 25, color: Colors.white),
                     onPressed: () {
-                      Navigator.of(context).pushNamed("/PantallaCitas");
+                      Navigator.of(context).pushNamed("/citas");
                     },
-                  ),
-                  Text(
-                    'Citas',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -49,15 +46,10 @@ class Footer extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(Icons.account_box),
+                    icon: Icon(Icons.edit_note_rounded, size: 25, color: Colors.white),
                     onPressed: () {
-                      
+                      Navigator.of(context).pushNamed("/testEvaluativo");
                     },
-                  ),
-                  Text(
-                    '...',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -66,14 +58,10 @@ class Footer extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(Icons.person),
+                    icon: Icon(Icons.account_circle_outlined, size: 25, color: Colors.white),
                     onPressed: () {
+                      Navigator.of(context).pushNamed("/perfil");
                     },
-                  ),
-                  Text(
-                    'Perfil',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

@@ -1,0 +1,13 @@
+io.flutter.plugins.webviewflutter.webview_flutter_android-jetified-annotation-experimental-1.1.0-0 C:\Users\jdvil\.gradle\caches\transforms-3\0ee9e38e81120acb405b16317f88005e\transformed\jetified-annotation-experimental-1.1.0\res
+io.flutter.plugins.webviewflutter.webview_flutter_android-jetified-window-java-1.0.0-beta04-1 C:\Users\jdvil\.gradle\caches\transforms-3\52327bdbb6080289c26b0e652865ef2f\transformed\jetified-window-java-1.0.0-beta04\res
+io.flutter.plugins.webviewflutter.webview_flutter_android-jetified-window-1.0.0-beta04-2 C:\Users\jdvil\.gradle\caches\transforms-3\78fbd64af62dbdf102ba7c817970421b\transformed\jetified-window-1.0.0-beta04\res
+io.flutter.plugins.webviewflutter.webview_flutter_android-core-1.6.0-3 C:\Users\jdvil\.gradle\caches\transforms-3\7c1d12144b2ebda7a6da3814a09658ad\transformed\core-1.6.0\res
+io.flutter.plugins.webviewflutter.webview_flutter_android-webkit-1.12.0-4 C:\Users\jdvil\.gradle\caches\transforms-3\e165d0a7f6b69cb89ac6a6501ecd43a5\transformed\webkit-1.12.0\res
+io.flutter.plugins.webviewflutter.webview_flutter_android-main-5 C:\Users\jdvil\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter_android-3.16.8\android\src\main\res
+io.flutter.plugins.webviewflutter.webview_flutter_android-release-6 C:\Users\jdvil\AppData\Local\Pub\Cache\hosted\pub.dev\webview_flutter_android-3.16.8\android\src\release\res
+io.flutter.plugins.webviewflutter.webview_flutter_android-pngs-7 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\webview_flutter_android\generated\res\pngs\release
+io.flutter.plugins.webviewflutter.webview_flutter_android-resValues-8 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\webview_flutter_android\generated\res\resValues\release
+io.flutter.plugins.webviewflutter.webview_flutter_android-rs-9 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\webview_flutter_android\generated\res\rs\release
+io.flutter.plugins.webviewflutter.webview_flutter_android-mergeReleaseResources-10 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\webview_flutter_android\intermediates\incremental\release\mergeReleaseResources\merged.dir
+io.flutter.plugins.webviewflutter.webview_flutter_android-mergeReleaseResources-11 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\webview_flutter_android\intermediates\incremental\release\mergeReleaseResources\stripped.dir
+io.flutter.plugins.webviewflutter.webview_flutter_android-merged_res-12 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\webview_flutter_android\intermediates\merged_res\release

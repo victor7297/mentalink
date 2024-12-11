@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.mastertipsy.flutter_localization-merged_res-10:/layout/custom_dialog.xml",
+        "source": "com.mastertipsy.flutter_localization-core-1.6.0-3:/layout/custom_dialog.xml"
+    },
+    {
+        "merged": "com.mastertipsy.flutter_localization-merged_res-10:/layout/notification_template_part_time.xml",
+        "source": "com.mastertipsy.flutter_localization-core-1.6.0-3:/layout/notification_template_part_time.xml"
+    },
+    {
+        "merged": "com.mastertipsy.flutter_localization-merged_res-10:/layout/notification_template_part_chronometer.xml",
+        "source": "com.mastertipsy.flutter_localization-core-1.6.0-3:/layout/notification_template_part_chronometer.xml"
+    }
+]

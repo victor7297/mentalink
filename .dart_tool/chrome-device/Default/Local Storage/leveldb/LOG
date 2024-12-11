@@ -1,0 +1,16 @@
+2024/12/11-11:14:55.719 4728 Reusing MANIFEST C:\Users\tepuy\AppData\Local\Temp\flutter_tools.1b79c459\flutter_tools_chrome_device.d5e54c1b\Default\Local Storage\leveldb/MANIFEST-000001
+2024/12/11-11:14:55.728 4728 Recovering log #4
+2024/12/11-11:14:55.729 4728 Level-0 table #7: started
+2024/12/11-11:14:55.738 4728 Level-0 table #7: 3650 bytes OK
+2024/12/11-11:14:55.738 4728 Recovering log #9
+2024/12/11-11:14:55.741 4728 Level-0 table #8: started
+2024/12/11-11:14:55.752 4728 Level-0 table #8: 53094 bytes OK
+2024/12/11-11:14:55.753 4728 Recovering log #12
+2024/12/11-11:14:55.756 4728 Reusing old log C:\Users\tepuy\AppData\Local\Temp\flutter_tools.1b79c459\flutter_tools_chrome_device.d5e54c1b\Default\Local Storage\leveldb/000012.log 
+2024/12/11-11:14:55.760 4728 Delete type=2 #3
+2024/12/11-11:14:55.760 4728 Delete type=0 #3
+2024/12/11-11:14:55.761 4728 Delete type=2 #4
+2024/12/11-11:14:55.761 4728 Delete type=0 #4
+2024/12/11-11:14:55.761 4728 Delete type=0 #9
+2024/12/11-11:14:55.761 4728 Delete type=2 #10
+2024/12/11-11:14:55.761 4728 Delete type=2 #13

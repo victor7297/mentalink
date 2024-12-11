@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-merged_res-11:/layout/notification_template_part_time.xml",
+        "source": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-core-1.6.0-4:/layout/notification_template_part_time.xml"
+    },
+    {
+        "merged": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-merged_res-11:/layout/custom_dialog.xml",
+        "source": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-core-1.6.0-4:/layout/custom_dialog.xml"
+    },
+    {
+        "merged": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-merged_res-11:/layout/browser_actions_context_menu_row.xml",
+        "source": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-browser-1.5.0-1:/layout/browser_actions_context_menu_row.xml"
+    },
+    {
+        "merged": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-merged_res-11:/layout/browser_actions_context_menu_page.xml",
+        "source": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-browser-1.5.0-1:/layout/browser_actions_context_menu_page.xml"
+    },
+    {
+        "merged": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-merged_res-11:/layout/notification_action_tombstone.xml",
+        "source": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-core-1.6.0-4:/layout/notification_action_tombstone.xml"
+    },
+    {
+        "merged": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-merged_res-11:/layout/notification_template_part_chronometer.xml",
+        "source": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-core-1.6.0-4:/layout/notification_template_part_chronometer.xml"
+    },
+    {
+        "merged": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-merged_res-11:/layout/notification_action.xml",
+        "source": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-core-1.6.0-4:/layout/notification_action.xml"
+    },
+    {
+        "merged": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-merged_res-11:/layout/notification_template_icon_group.xml",
+        "source": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-core-1.6.0-4:/layout/notification_template_icon_group.xml"
+    }
+]

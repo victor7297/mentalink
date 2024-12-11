@@ -1,0 +1,68 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-mergeReleaseResources-9:/values-te/values-te.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\jdvil\\.gradle\\caches\\transforms-3\\4fac1aa7b9688ed8d3a9ee801ddcc1a1\\transformed\\browser-1.5.0\\res\\values-te\\values-te.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,166,272,383",
+                        "endColumns": "110,105,110,106",
+                        "endOffsets": "161,267,378,485"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\jdvil\\.gradle\\caches\\transforms-3\\7c1d12144b2ebda7a6da3814a09658ad\\transformed\\core-1.6.0\\res\\values-te\\values-te.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "6",
+                        "startColumns": "4",
+                        "startOffsets": "490",
+                        "endColumns": "100",
+                        "endOffsets": "586"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "com.github.droibit.plugins.flutter.customtabs.flutter_custom_tabs_android-merged_res-11:/values-te/values-te.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\jdvil\\.gradle\\caches\\transforms-3\\4fac1aa7b9688ed8d3a9ee801ddcc1a1\\transformed\\browser-1.5.0\\res\\values-te\\values-te.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,166,272,383",
+                        "endColumns": "110,105,110,106",
+                        "endOffsets": "161,267,378,485"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\jdvil\\.gradle\\caches\\transforms-3\\7c1d12144b2ebda7a6da3814a09658ad\\transformed\\core-1.6.0\\res\\values-te\\values-te.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "6",
+                        "startColumns": "4",
+                        "startOffsets": "490",
+                        "endColumns": "100",
+                        "endOffsets": "586"
+                    }
+                }
+            ]
+        }
+    ]
+}

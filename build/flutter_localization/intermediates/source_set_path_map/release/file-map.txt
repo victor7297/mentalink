@@ -1,0 +1,12 @@
+com.mastertipsy.flutter_localization-jetified-annotation-experimental-1.1.0-0 C:\Users\jdvil\.gradle\caches\transforms-3\0ee9e38e81120acb405b16317f88005e\transformed\jetified-annotation-experimental-1.1.0\res
+com.mastertipsy.flutter_localization-jetified-window-java-1.0.0-beta04-1 C:\Users\jdvil\.gradle\caches\transforms-3\52327bdbb6080289c26b0e652865ef2f\transformed\jetified-window-java-1.0.0-beta04\res
+com.mastertipsy.flutter_localization-jetified-window-1.0.0-beta04-2 C:\Users\jdvil\.gradle\caches\transforms-3\78fbd64af62dbdf102ba7c817970421b\transformed\jetified-window-1.0.0-beta04\res
+com.mastertipsy.flutter_localization-core-1.6.0-3 C:\Users\jdvil\.gradle\caches\transforms-3\7c1d12144b2ebda7a6da3814a09658ad\transformed\core-1.6.0\res
+com.mastertipsy.flutter_localization-main-4 C:\Users\jdvil\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_localization-0.2.0\android\src\main\res
+com.mastertipsy.flutter_localization-release-5 C:\Users\jdvil\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_localization-0.2.0\android\src\release\res
+com.mastertipsy.flutter_localization-pngs-6 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\flutter_localization\generated\res\pngs\release
+com.mastertipsy.flutter_localization-resValues-7 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\flutter_localization\generated\res\resValues\release
+com.mastertipsy.flutter_localization-rs-8 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\flutter_localization\generated\res\rs\release
+com.mastertipsy.flutter_localization-mergeReleaseResources-9 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\flutter_localization\intermediates\incremental\release\mergeReleaseResources\merged.dir
+com.mastertipsy.flutter_localization-mergeReleaseResources-10 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\flutter_localization\intermediates\incremental\release\mergeReleaseResources\stripped.dir
+com.mastertipsy.flutter_localization-merged_res-11 C:\Users\jdvil\OneDrive\Desktop\mentalink\build\flutter_localization\intermediates\merged_res\release
