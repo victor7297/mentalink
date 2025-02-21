@@ -8,7 +8,7 @@ import 'package:mentalink/src/Views/Psicologos/agendarCita.dart';
 
 class Servicio {
   String ruta = "https://mentalink.org/api-mentalink-prueba-v/public/";
-  //String ruta = "https://mentalink.org/api-mentalink/public/";
+  //String ruta = "https://mentalink.tepuy21.com/api-mentalink/public/";
 
   Future<Map<String, dynamic>> registrarUsuario(
       Map<String, dynamic> data) async {
@@ -164,11 +164,7 @@ class Servicio {
     var url = Uri.parse(ruta + "progreso-bdi/$id");
     var response = await http.get(url);
 
-    if (response.statusCode == 200) {
       return json.decode(response.body);
-    } else {
-      throw Exception('${response.statusCode}');
-    }
   }
 
   Future<Map<String, dynamic>> progresoTestAnsiedad(int id) async {
@@ -243,25 +239,22 @@ class Servicio {
     var url = Uri.parse(ruta + "testcooper/$id");
     var response = await http.get(url);
 
-    if (response.statusCode == 200) {
       return json.decode(response.body);
-    } else {
-      throw Exception('${response.statusCode}');
-    }
+
   }
 
   Future<void> enviarRespuestaTestBDI(
       int preguntaId, int respuesta, int numOpciones, int usuarioId) async {
-    var url = Uri.parse(ruta + '/testbdi');
+    var url = Uri.parse(ruta + 'testbdi');
 
-    // Formato de pregunta
+    // formato d epregunta
     var nombrePregunta = 'p${preguntaId + 1}';
 
     var body = jsonEncode({
       'alumno_id': usuarioId,
       'nombrePregunta': nombrePregunta,
       'respuesta': respuesta,
-      'opciones': numOpciones
+      'opciones': numOpciones,
     });
 
     var response = await http.post(
@@ -482,9 +475,9 @@ class Servicio {
     return respuestaJson;
   }
 
-  Future<Map<String, dynamic>> actualizarCita(
+  /*Future<Map<String, dynamic>> actualizarCita(
       String citaId, DateTime nuevaFechaHora) async {
-    final response = await http.put(
+    final response = await http.post(
       Uri.parse(ruta + 'reprogramar-cita'),
       body: json.encode({
         'cita_id': citaId,
@@ -494,6 +487,24 @@ class Servicio {
 
     var respuestaJson = jsonDecode(response.body);
     return respuestaJson;
+  }*/
+
+  Future<Map<String, dynamic>> actualizarCita(
+    String citaId, DateTime nuevaFechaHora) async {
+    final response = await http.put(
+      Uri.parse(ruta + 'reprogramar-cita'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'cita_id': citaId,
+        'nueva_fecha_hora': nuevaFechaHora.toIso8601String(),
+      }),
+    );
+
+      var respuestaJson = jsonDecode(response.body);
+      return respuestaJson;
+
   }
 
   Future<Map<String, dynamic>> cancelarCita(String citaId, String causa) async {
@@ -565,7 +576,7 @@ class Servicio {
   }
 
   Future<dynamic> recuperarPassword(data) async {
-    var url = Uri.parse(ruta + "/recuperar-cuenta");
+    var url = Uri.parse(ruta + "recuperar-cuenta");
     var response = await http.post(url, body: data);
     var respuestaJson = jsonDecode(response.body);
 
@@ -573,7 +584,7 @@ class Servicio {
   }
 
   Future<dynamic> actualizarPassword(data) async {
-    var url = Uri.parse(ruta + "/cambiar-contrasena");
+    var url = Uri.parse(ruta + "cambiar-contrasena");
     var response = await http.put(url, body: data);
     var respuestaJson = jsonDecode(response.body);
 
@@ -587,6 +598,23 @@ class Servicio {
 
     return respuestaJson;
   }
+
+  Future<dynamic> enviarCorreoCodigo(data) async {
+    var url = Uri.parse(ruta + "enviar-codigo-verificacion");
+    var response = await http.post(url, body: data);
+    var respuestaJson = jsonDecode(response.body);
+
+    return respuestaJson;
+  }
+
+  Future<dynamic> verificarCorreoCodigo(data) async {
+    var url = Uri.parse(ruta + "verificar-codigo-correo");
+    var response = await http.post(url, body: data);
+    var respuestaJson = jsonDecode(response.body);
+
+    return respuestaJson;
+  }
+
 
   Future<dynamic> enviarDatos(
       {String? telefono,

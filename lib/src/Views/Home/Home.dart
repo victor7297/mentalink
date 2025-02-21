@@ -545,255 +545,518 @@ class _HomeState extends State<Home> {
                   ),
                 )*/
 
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: filtroPsicologos.length,
-                    itemBuilder: (context, index) {
-                      String nombrePsicologo = filtroPsicologos[index]['nombre'];
-                      String apellido = filtroPsicologos[index]['apellido'];
-                      String fotoUrl = filtroPsicologos[index]['foto'];
-                      String correo = filtroPsicologos[index]['correo'];
-                      String? tipoUsuario = tipoUsuarioGlobal;
-
-                      if (tipoUsuario == "2") {
-                        return InkWell(
-                          onTap: () {
-                            Map<String, dynamic> psicologoSeleccionado = {
-                              'id': filtroPsicologos[index]['usuario_id'],
-                              'nombre': nombrePsicologo,
-                              'apellido': apellido,
-                              'foto': fotoUrl,
-                              'correo': correo,
-                            };
-                            //Navigator.of(context).pushNamed("/menuEspecialistas", arguments: psicologoSeleccionado);
-                          },
-                          child: Container(
-                            height: 130,
-                            margin: EdgeInsets.only(top: 10),
-                            child: Card(
-                              elevation: 4.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
+                /*Wrap(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20),
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: filtroPsicologos.length,
+                        itemBuilder: (context, index) {
+                          String nombrePsicologo = filtroPsicologos[index]['nombre'];
+                          String apellido = filtroPsicologos[index]['apellido'];
+                          String fotoUrl = filtroPsicologos[index]['foto'];
+                          String correo = filtroPsicologos[index]['correo'];
+                          String? tipoUsuario = tipoUsuarioGlobal;
+                    
+                          if (tipoUsuario == "2") {
+                            return InkWell(
+                              onTap: () {
+                                Map<String, dynamic> psicologoSeleccionado = {
+                                  'id': filtroPsicologos[index]['usuario_id'],
+                                  'nombre': nombrePsicologo,
+                                  'apellido': apellido,
+                                  'foto': fotoUrl,
+                                  'correo': correo,
+                                };
+                                //Navigator.of(context).pushNamed("/menuEspecialistas", arguments: psicologoSeleccionado);
+                              },
+                              child: Container(
+                                height: 130,
+                                margin: EdgeInsets.only(top: 10),
+                                child: Card(
+                                  elevation: 4.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Container(
-                                          width: 60,
-                                          height: 60,
-                                          child: fotoUrl.isNotEmpty
-                                              ? ClipOval(
-                                                  child: Image.network(
-                                                    "https://mentalink.tepuy21.com/api-mentalink/public/" + fotoUrl,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                )
-                                              : Icon(
-                                                  Icons.account_circle_rounded,
-                                                  color: Colors.grey,
-                                                  size: 60,
-                                                ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Container(
-                                          padding: EdgeInsets.all(5),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "${nombrePsicologo.toUpperCase()} ${apellido.toUpperCase()}",
-                                                style: TextStyle(fontWeight: FontWeight.bold),
-                                              ),
-                                              Text(
-                                                correo,
-                                                style: TextStyle(fontWeight: FontWeight.w200),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        String pais = paisGlobal;
-                        String especialidad = filtroPsicologos[index]['especialidad'] ?? "Psicólogo";
-                        String tipoCita = filtroPsicologos[index]['tipo_cita'] ?? "";
-                        String tipo_cita_1 = tipoCita.contains("ambas") ? "remota y presencial" : tipoCita;
-                        String favorito = filtroPsicologos[index]['es_favorito'];
-                        bool isSelected = favorito == "true";
-                        String costo_presencial = filtroPsicologos[index]['costo_presencial'] ?? 'No disponible';
-                        String costo_remota = filtroPsicologos[index]['costo_remota'] ?? 'No disponible';
-                        String costo_internacional = filtroPsicologos[index]['costo_internacional'] ?? 'No disponible';
-                        String costo_cita;
-
-                        if (pais == "Venezuela") {
-                          if (tipoCita.contains("ambas")) {
-                            costo_cita = "Presencial: $costo_presencial\$ , Remota: $costo_remota\$";
-                          } else if (tipoCita == "presencial") {
-                            costo_cita = "Presencial: $costo_presencial\$";
-                          } else if (tipoCita == "remota") {
-                            costo_cita = "Remota: $costo_remota\$";
-                          } else {
-                            costo_cita = "Costo no disponible";
-                          }
-                        } else {
-                          costo_cita = "Costo: $costo_internacional\$";
-                        }
-
-                        return InkWell(
-                          onTap: () {
-                            Map<String, dynamic> psicologoSeleccionado = {
-                              'id': filtroPsicologos[index]['usuario_id'],
-                              'nombre': nombrePsicologo,
-                              'apellido': apellido,
-                              'foto': fotoUrl,
-                              'correo': correo,
-                              'especialidad': especialidad,
-                              'tipo_cita': filtroPsicologos[index]['tipo_cita'],
-                              'presencial_direccion': filtroPsicologos[index]['presencial_direccion'],
-                              'costo_presencial': filtroPsicologos[index]['costo_presencial'],
-                              'costo_remota': filtroPsicologos[index]['costo_remota'],
-                              'costo_internacional': filtroPsicologos[index]['costo_internacional'],
-                              'pais': pais,
-                            };
-                            Navigator.of(context).pushNamed("/menuEspecialistas", arguments: psicologoSeleccionado);
-                          },
-                          child: Container(
-                            height: 180,
-                            margin: EdgeInsets.only(top: 10),
-                            child: Card(
-                              elevation: 4.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: BorderSide(
-                                  color: isSelected ? Color.fromRGBO(72, 189, 199, 1) : Colors.transparent,
-                                  width: 2.0,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 60,
-                                          height: 60,
-                                          child: fotoUrl.isNotEmpty
-                                              ? ClipOval(
-                                                  child: Image.network(
-                                                    "https://mentalink.org/api-mentalink-prueba-v/public/" + fotoUrl,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                )
-                                              : Icon(
-                                                  Icons.account_circle_rounded,
-                                                  color: Colors.grey,
-                                                  size: 60,
-                                                ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: Container(
-                                            padding: EdgeInsets.all(5),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "${nombrePsicologo.toUpperCase()} ${apellido.toUpperCase()}",
-                                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  especialidad,
-                                                  style: TextStyle(fontWeight: FontWeight.w400),
-                                                  maxLines: 2,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                                if (pais == "Venezuela") ...[
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 60,
+                                              height: 60,
+                                              child: fotoUrl.isNotEmpty
+                                                  ? ClipOval(
+                                                      child: Image.network(
+                                                        "https://mentalink.tepuy21.com/api-mentalink/public/" + fotoUrl,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    )
+                                                  : Icon(
+                                                      Icons.account_circle_rounded,
+                                                      color: Colors.grey,
+                                                      size: 60,
+                                                    ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Container(
+                                              padding: EdgeInsets.all(5),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
                                                   Text(
-                                                    "Citas: $tipo_cita_1",
-                                                    style: TextStyle(fontWeight: FontWeight.w400),
+                                                    "${nombrePsicologo.toUpperCase()} ${apellido.toUpperCase()}",
+                                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    correo,
+                                                    style: TextStyle(fontWeight: FontWeight.w200),
                                                   ),
                                                 ],
-                                                Container(
-                                                  margin: EdgeInsets.only(top: 3),
-                                                  child: Text(
-                                                    "$costo_cita",
-                                                    style: TextStyle(fontWeight: FontWeight.w500),
-                                                  ),
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(right: 2),
-                                          child: TextButton(
-                                            onPressed: () async {
-                                              SharedPreferences prefs = await SharedPreferences.getInstance();
-                                              String pacienteId = prefs.getString('usuario_id') ?? "";
-
-                                              await Servicio().marcarUsuario(filtroPsicologos[index]['usuario_id'], pacienteId);
-
-                                              setState(() {
-                                                filtroPsicologos[index]['es_favorito'] = isSelected ? "false" : "true";
-                                              });
-                                            },
-                                            style: ButtonStyle(
-                                              elevation: MaterialStateProperty.all(10.0),
-                                              minimumSize: MaterialStateProperty.all(Size(40, 40)),
-                                              padding: MaterialStateProperty.all(EdgeInsets.all(10)),
-                                            ),
-                                            child: Icon(
-                                              isSelected ? Icons.star : Icons.star_border,
-                                              color: Color.fromRGBO(72, 189, 199, 1),
-                                              size: 30,
-                                            ),
-                                          ),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {},
-                                          style: ButtonStyle(
-                                            elevation: MaterialStateProperty.all(10.0),
-                                            minimumSize: MaterialStateProperty.all(Size(40, 40)),
-                                            padding: MaterialStateProperty.all(EdgeInsets.all(10)),
-                                          ),
-                                          child: Icon(
-                                            Icons.search,
-                                            color: Color.fromRGBO(72, 189, 199, 1),
-                                            size: 30,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                            );
+                          } else {
+                            String pais = paisGlobal;
+                            String especialidad = filtroPsicologos[index]['especialidad'] ?? "Psicólogo";
+                            String tipoCita = filtroPsicologos[index]['tipo_cita'] ?? "";
+                            String tipo_cita_1 = tipoCita.contains("ambas") ? "remota y presencial" : tipoCita;
+                            String favorito = filtroPsicologos[index]['es_favorito'];
+                            bool isSelected = favorito == "true";
+                            String costo_presencial = filtroPsicologos[index]['costo_presencial'] ?? 'No disponible';
+                            String costo_remota = filtroPsicologos[index]['costo_remota'] ?? 'No disponible';
+                            String costo_internacional = filtroPsicologos[index]['costo_internacional'] ?? 'No disponible';
+                            String costo_cita;
+                    
+                            if (pais == "Venezuela") {
+                              if (tipoCita.contains("ambas")) {
+                                costo_cita = "Presencial: $costo_presencial\$ , Remota: $costo_remota\$";
+                              } else if (tipoCita == "presencial") {
+                                costo_cita = "Presencial: $costo_presencial\$";
+                              } else if (tipoCita == "remota") {
+                                costo_cita = "Remota: $costo_remota\$";
+                              } else {
+                                costo_cita = "Costo no disponible";
+                              }
+                            } else {
+                              costo_cita = "Costo: $costo_internacional\$";
+                            }
+                    
+                            return InkWell(
+                              onTap: () {
+                                Map<String, dynamic> psicologoSeleccionado = {
+                                  'id': filtroPsicologos[index]['usuario_id'],
+                                  'nombre': nombrePsicologo,
+                                  'apellido': apellido,
+                                  'foto': fotoUrl,
+                                  'correo': correo,
+                                  'especialidad': especialidad,
+                                  'tipo_cita': filtroPsicologos[index]['tipo_cita'],
+                                  'presencial_direccion': filtroPsicologos[index]['presencial_direccion'],
+                                  'costo_presencial': filtroPsicologos[index]['costo_presencial'],
+                                  'costo_remota': filtroPsicologos[index]['costo_remota'],
+                                  'costo_internacional': filtroPsicologos[index]['costo_internacional'],
+                                  'pais': pais,
+                                };
+                                Navigator.of(context).pushNamed("/menuEspecialistas", arguments: psicologoSeleccionado);
+                              },
+                              child: Container(
+                                height: 180,
+                                margin: EdgeInsets.only(top: 10),
+                                child: Card(
+                                  elevation: 4.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    side: BorderSide(
+                                      color: isSelected ? Color.fromRGBO(72, 189, 199, 1) : Colors.transparent,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 60,
+                                              height: 60,
+                                              child: fotoUrl.isNotEmpty
+                                                  ? ClipOval(
+                                                      child: Image.network(
+                                                        "https://mentalink.org/api-mentalink-prueba-v/public/" + fotoUrl,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    )
+                                                  : Icon(
+                                                      Icons.account_circle_rounded,
+                                                      color: Colors.grey,
+                                                      size: 60,
+                                                    ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: Container(
+                                                padding: EdgeInsets.all(5),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "${nombrePsicologo.toUpperCase()} ${apellido.toUpperCase()}",
+                                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                                    ),
+                                                    Text(
+                                                      especialidad,
+                                                      style: TextStyle(fontWeight: FontWeight.w400),
+                                                      maxLines: 2,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                    if (pais == "Venezuela") ...[
+                                                      Text(
+                                                        "Citas: $tipo_cita_1",
+                                                        style: TextStyle(fontWeight: FontWeight.w400),
+                                                      ),
+                                                    ],
+                                                    Container(
+                                                      margin: EdgeInsets.only(top: 3),
+                                                      child: Text(
+                                                        "$costo_cita",
+                                                        style: TextStyle(fontWeight: FontWeight.w500),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(right: 2),
+                                              child: TextButton(
+                                                onPressed: () async {
+                                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                  String pacienteId = prefs.getString('usuario_id') ?? "";
+                    
+                                                  await Servicio().marcarUsuario(filtroPsicologos[index]['usuario_id'], pacienteId);
+                    
+                                                  setState(() {
+                                                    filtroPsicologos[index]['es_favorito'] = isSelected ? "false" : "true";
+                                                  });
+                                                },
+                                                style: ButtonStyle(
+                                                  elevation: MaterialStateProperty.all(10.0),
+                                                  minimumSize: MaterialStateProperty.all(Size(40, 40)),
+                                                  padding: MaterialStateProperty.all(EdgeInsets.all(10)),
+                                                ),
+                                                child: Icon(
+                                                  isSelected ? Icons.star : Icons.star_border,
+                                                  color: Color.fromRGBO(72, 189, 199, 1),
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {},
+                                              style: ButtonStyle(
+                                                elevation: MaterialStateProperty.all(10.0),
+                                                minimumSize: MaterialStateProperty.all(Size(40, 40)),
+                                                padding: MaterialStateProperty.all(EdgeInsets.all(10)),
+                                              ),
+                                              child: Icon(
+                                                Icons.search,
+                                                color: Color.fromRGBO(72, 189, 199, 1),
+                                                size: 30,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                )*/
+
+                Wrap(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 20),
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: filtroPsicologos.length,
+                        itemBuilder: (context, index) {
+                          String nombrePsicologo = filtroPsicologos[index]['nombre'];
+                          String apellido = filtroPsicologos[index]['apellido'];
+                          String fotoUrl = filtroPsicologos[index]['foto'];
+                          String correo = filtroPsicologos[index]['correo'];
+                          String? tipoUsuario = tipoUsuarioGlobal;
+
+                          if (tipoUsuario == "2") {
+                            return InkWell(
+                              onTap: () {
+                                Map<String, dynamic> psicologoSeleccionado = {
+                                  'id': filtroPsicologos[index]['usuario_id'],
+                                  'nombre': nombrePsicologo,
+                                  'apellido': apellido,
+                                  'foto': fotoUrl,
+                                  'correo': correo,
+                                };
+                                //Navigator.of(context).pushNamed("/menuEspecialistas", arguments: psicologoSeleccionado);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(top: 10),
+                                child: Card(
+                                  elevation: 4.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 60,
+                                              height: 60,
+                                              child: fotoUrl.isNotEmpty
+                                                  ? ClipOval(
+                                                      child: Image.network(
+                                                        "https://mentalink.tepuy21.com/api-mentalink/public/" + fotoUrl,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    )
+                                                  : Icon(
+                                                      Icons.account_circle_rounded,
+                                                      color: Colors.grey,
+                                                      size: 60,
+                                                    ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: Container(
+                                                padding: EdgeInsets.all(5),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "${nombrePsicologo.toUpperCase()} ${apellido.toUpperCase()}",
+                                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                    Text(
+                                                      correo,
+                                                      style: TextStyle(fontWeight: FontWeight.w200),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            // Caso para tipoUsuario != "2",
+                            String pais = paisGlobal;
+                            String especialidad = filtroPsicologos[index]['especialidad'] ?? "Psicólogo";
+                            String tipoCita = filtroPsicologos[index]['tipo_cita'] ?? "";
+                            String tipo_cita_1 = tipoCita.contains("ambas") ? "remota y presencial" : tipoCita;
+                            String favorito = filtroPsicologos[index]['es_favorito'];
+                            bool isSelected = favorito == "true";
+                            String costo_presencial = filtroPsicologos[index]['costo_presencial'] ?? 'No disponible';
+                            String costo_remota = filtroPsicologos[index]['costo_remota'] ?? 'No disponible';
+                            String costo_internacional = filtroPsicologos[index]['costo_internacional'] ?? 'No disponible';
+                            String costo_cita;
+
+                            if (pais == "Venezuela") {
+                              if (tipoCita.contains("ambas")) {
+                                costo_cita = "Presencial: $costo_presencial\$ , Remota: $costo_remota\$";
+                              } else if (tipoCita == "presencial") {
+                                costo_cita = "Presencial: $costo_presencial\$";
+                              } else if (tipoCita == "remota") {
+                                costo_cita = "Remota: $costo_remota\$";
+                              } else {
+                                costo_cita = "Costo no disponible";
+                              }
+                            } else {
+                              costo_cita = "Costo: $costo_internacional\$";
+                            }
+
+                            return InkWell(
+                              onTap: () {
+                                Map<String, dynamic> psicologoSeleccionado = {
+                                  'id': filtroPsicologos[index]['usuario_id'],
+                                  'nombre': nombrePsicologo,
+                                  'apellido': apellido,
+                                  'foto': fotoUrl,
+                                  'correo': correo,
+                                  'especialidad': especialidad,
+                                  'tipo_cita': filtroPsicologos[index]['tipo_cita'],
+                                  'presencial_direccion': filtroPsicologos[index]['presencial_direccion'],
+                                  'costo_presencial': filtroPsicologos[index]['costo_presencial'],
+                                  'costo_remota': filtroPsicologos[index]['costo_remota'],
+                                  'costo_internacional': filtroPsicologos[index]['costo_internacional'],
+                                  'pais': pais,
+                                };
+                                Navigator.of(context).pushNamed("/menuEspecialistas", arguments: psicologoSeleccionado);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(top: 10),
+                                child: Card(
+                                  elevation: 4.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    side: BorderSide(
+                                      color: isSelected ? Color.fromRGBO(72, 189, 199, 1) : Colors.transparent,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 60,
+                                              height: 60,
+                                              child: fotoUrl.isNotEmpty
+                                                  ? ClipOval(
+                                                      child: Image.network(
+                                                        "https://mentalink.org/api-mentalink-prueba-v/public/" + fotoUrl,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    )
+                                                  : Icon(
+                                                      Icons.account_circle_rounded,
+                                                      color: Colors.grey,
+                                                      size: 60,
+                                                    ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: Container(
+                                                padding: EdgeInsets.all(5),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "${nombrePsicologo.toUpperCase()} ${apellido.toUpperCase()}",
+                                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                    Text(
+                                                      especialidad,
+                                                      style: TextStyle(fontWeight: FontWeight.w400),
+                                                      maxLines: 2,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                    if (pais == "Venezuela") ...[
+                                                      Text(
+                                                        "Citas: $tipo_cita_1",
+                                                        style: TextStyle(fontWeight: FontWeight.w400),
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ],
+                                                    Container(
+                                                      margin: EdgeInsets.only(top: 3),
+                                                      child: Text(
+                                                        "$costo_cita",
+                                                        style: TextStyle(fontWeight: FontWeight.w500),
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(right: 2),
+                                              child: TextButton(
+                                                onPressed: () async {
+                                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                  String pacienteId = prefs.getString('usuario_id') ?? "";
+
+                                                  await Servicio().marcarUsuario(filtroPsicologos[index]['usuario_id'], pacienteId);
+
+                                                  setState(() {
+                                                    filtroPsicologos[index]['es_favorito'] = isSelected ? "false" : "true";
+                                                  });
+                                                },
+                                                style: ButtonStyle(
+                                                  elevation: MaterialStateProperty.all(10.0),
+                                                  minimumSize: MaterialStateProperty.all(Size(40, 40)),
+                                                  padding: MaterialStateProperty.all(EdgeInsets.all(10)),
+                                                ),
+                                                child: Icon(
+                                                  isSelected ? Icons.star : Icons.star_border,
+                                                  color: Color.fromRGBO(72, 189, 199, 1),
+                                                  size: 30,
+                                                ),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {},
+                                              style: ButtonStyle(
+                                                elevation: MaterialStateProperty.all(10.0),
+                                                minimumSize: MaterialStateProperty.all(Size(40, 40)),
+                                                padding: MaterialStateProperty.all(EdgeInsets.all(10)),
+                                              ),
+                                              child: Icon(
+                                                Icons.search,
+                                                color: Color.fromRGBO(72, 189, 199, 1),
+                                                size: 30,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 )
+
 
 
 

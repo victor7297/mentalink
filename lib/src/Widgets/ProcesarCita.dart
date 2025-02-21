@@ -7,6 +7,7 @@ import 'package:mentalink/src/Clases/appbar.dart';
 import 'package:mentalink/src/Servicios/Servicio.dart';
 import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mentalink/src/Widgets/ModalPagoMovil.dart';
 import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,14 +47,20 @@ class _ProcesarCitaState extends State<ProcesarCita> {
   final TextEditingController _conferenceLinkController =
       TextEditingController();
   late GoogleSignIn _googleSignIn;
-  String? _errorMessage;
+  String? _errorMensaje;
+
+  double dolarPromedio = 0.0;
+
+  bool cargando = false;
+  bool errorDolar = false;
 
   @override
   void initState() {
     super.initState();
     _googleSignIn = GoogleSignIn();
-    obtenerDolar();
+    //obtenerDolar();
 
+    //obtenerDolar(montoController);
 
   }
 
@@ -74,16 +81,52 @@ class _ProcesarCitaState extends State<ProcesarCita> {
     await prefs.setString('fotoPerfil', usuarioData['foto']);
   }
 
-  void obtenerDolar() async {
+  /*void obtenerDolar() async {
     try {
-      dolarData = await Servicio().obtenerDolarOficial();
-      print(dolarData['promedio']);
-      setState(() {});
+      var dolarData = await Servicio().obtenerDolarOficial();
+      dolarPromedio = dolarData['promedio'];
+      setState(() {
+        
+      });
     } catch (e) {
-      _errorMessage = e.toString();
+      print('Error al obtener el valor del dólar: $e');
+      
+    }
+  }*/
+
+  /*void obtenerDolar(TextEditingController montoController) async {
+    try {
+      var dolarData = await Servicio().obtenerDolarOficial();
+      dolarPromedio = dolarData['promedio'];
+
       setState(() {});
+
+    } catch (e) {
+      setState(() {
+        montoController.text = 'Error: $e';
+      });
+    }
+  }*/
+
+  void obtenerDolar(TextEditingController montoController) async {
+    try {
+      var dolarData = await Servicio().obtenerDolarOficial();
+      dolarPromedio = dolarData['promedio'];
+
+      setState(() {
+        errorDolar = false;
+      });
+
+    } catch (e) {
+      setState(() {
+        errorDolar = true;
+        montoController.text = /*'Error: $e'*/ 'no se pudo obtener el monto';
+      });
     }
   }
+
+  final TextEditingController montoController = TextEditingController();
+
 
   Future<Map<String, dynamic>> _agendarCita(String paypalTransactionId) async {
     String usuarioId = widget.usuarioId;
@@ -206,7 +249,7 @@ class _ProcesarCitaState extends State<ProcesarCita> {
       int rtnCode = validacionPago['rtnCode'];
       String message = validacionPago['message'];
 
-      if (rtnCode != 0) {
+      /*if (rtnCode != 0) {
         if (rtnCode == -57) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -219,7 +262,54 @@ class _ProcesarCitaState extends State<ProcesarCita> {
           );
         }
         return {'status': 'error', 'message': message};
+      }*/
+
+      /*if (rtnCode != 0) {
+        if (rtnCode == -57) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'La transacción no puede ser localizada. Revise los datos del pago móvil.',
+              ),
+            ),
+          );
+        } else if (rtnCode == -56) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('La transacción ya fue validada.'),
+            ),
+          );
+        } else if (rtnCode == -99) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error general.'),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Código: $rtnCode, Mensaje: $message'),
+            ),
+          );
+        }
+        return {'status': 'error', 'message': "Eror al porcesar la operación Vepp"};
+      }*/
+
+      if (rtnCode != 0) {
+        String errorMessage = '';
+        if (rtnCode == -57) {
+          errorMessage = 'La transacción no puede ser localizada. Revise los datos del pago móvil.';
+        } else if (rtnCode == -56) {
+          errorMessage = 'La transacción ya fue validada.';
+        } else if (rtnCode == -99) {
+          errorMessage = 'Error general.';
+        } else {
+          errorMessage = 'Código: $rtnCode, Mensaje: $message';
+        }
+
+        return {'status': 'error', 'message': errorMessage};
       }
+
 
       String referenciaPago =
           validacionPago['result']['validatedPayments'][0]['reference'];
@@ -285,10 +375,10 @@ class _ProcesarCitaState extends State<ProcesarCita> {
           response = await Servicio().angendarCita(data);
 
           if (response['status'] == 'success') {
-            ScaffoldMessenger.of(context).showSnackBar(
+            /*ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Cita agendada exitosamente')),
             );
-            Navigator.pushNamed(context, '/citas');
+            Navigator.pushNamed(context, '/citas');*/
           } else {
             await widget.calendarApi!.events
                 .delete('primary', createdEvent.id!);
@@ -308,23 +398,25 @@ class _ProcesarCitaState extends State<ProcesarCita> {
 
           response = await Servicio().angendarCita(data);
 
-          if (response['status'] == 'success') {
+          /*if (response['status'] == 'success') {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Cita agendada exitosamente')),
             );
             Navigator.pushNamed(context, '/citas');
-          }
+          }*/
         }
       } catch (e) {
-        return {'status': 'error', 'message': 'Error al crear la cita: $e'};
+        return {'status': 'error', 'message': /*'Error al crear la cita: $e'*/ 'Por favor verifique su conexión e intente de nuevo.'};
       }
 
       return response;
+
     } catch (e) {
       return {
         'status': 'error',
-        'message': 'Error al validar el pago',
-        'details': e.toString()
+        'message': 'Por favor verifique su conexión e intente de nuevo.'
+        //'details': e.toString()
+        //'details': 'Por favor verifique su conexión e intente de nuevo.',
       };
     }
   }
@@ -407,7 +499,8 @@ class _ProcesarCitaState extends State<ProcesarCita> {
     }
   }
 
-  bool _isLoading = false;
+  bool _cargando = false;
+  
 
 /*void _ModalPagoMovil(BuildContext context) {
   final TextEditingController referenciaController = TextEditingController();
@@ -653,7 +746,7 @@ class _ProcesarCitaState extends State<ProcesarCita> {
                           }
 
                           setState(() {
-                            _isLoading = true;
+                            _cargando = true;
                           });
 
                           Navigator.pop(context);
@@ -666,7 +759,7 @@ class _ProcesarCitaState extends State<ProcesarCita> {
                           double monto = double.tryParse(montoController.text) ?? 0.0;
 
                           // Formatear la cédula y la fecha
-                          String formattedCedula = "V${cedula.replaceAll('-', '')}";
+                          String formatoCedula = "V${cedula.replaceAll('-', '')}";
                           DateTime startDate = DateTime.parse(fechaPago.split('-').reversed.join('-'));
                           DateTime endDate = startDate.add(Duration(days: 7));
 
@@ -680,7 +773,7 @@ class _ProcesarCitaState extends State<ProcesarCita> {
 
                           Map<String, dynamic> response = await _agendarCitaPagoMovil(
                             referencia: referencia,
-                            cedula: formattedCedula,
+                            cedula: formatoCedula,
                             banco: banco,
                             telefono: telefono,
                             amount: monto,
@@ -690,7 +783,7 @@ class _ProcesarCitaState extends State<ProcesarCita> {
                           );
 
                           setState(() {
-                            _isLoading = false;
+                            _cargando = false;
                           });
 
                           // Manejar la respuesta
@@ -728,13 +821,27 @@ class _ProcesarCitaState extends State<ProcesarCita> {
   );
 }*/
 
-  void _ModalPagoMovil(BuildContext context) {
+  /*void _ModalPagoMovil(BuildContext context) {
     final TextEditingController referenciaController = TextEditingController();
     final TextEditingController cedulaController = TextEditingController();
     final TextEditingController bancoController = TextEditingController();
     final TextEditingController telefonoController = TextEditingController();
     final TextEditingController fechaPagoController = TextEditingController();
-    final TextEditingController montoController = TextEditingController();
+    //final TextEditingController montoController = TextEditingController();
+    
+
+    obtenerDolar(montoController);
+
+    if (dolarPromedio > 0) {
+      double costoCita = double.parse(widget.costoCita);
+
+      double montoEnBs = costoCita * double.parse(dolarPromedio.toStringAsFixed(2));
+
+      setState(() {
+        montoController.text = montoEnBs.toStringAsFixed(2);
+      });
+    }
+
 
     Map<String, String> bancos = {
       "0102": "Banco de Venezuela, S.A. Banco Universal",
@@ -785,368 +892,81 @@ class _ProcesarCitaState extends State<ProcesarCita> {
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.7,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-          ),
-          child: Scaffold(
-            body: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Container(
-                        margin: EdgeInsets.only(top: 5),
-                        width: 50,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(127, 127, 136, 0.988),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Información de Pago',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Teléfono:',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('0424-2179421'),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Banco:',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Banesco'),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Documento:',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('J-505271920'),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(
-                            text:
-                                'Teléfono: 0424-2179421\nBanco: Banesco\nDocumento: J-505271920'));
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Datos copiados al portapapeles')));
-                      },
-                      child: Text('Copiar Datos',
-                          style: TextStyle(color: Colors.white)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(0, 189, 206, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          side: BorderSide(color: Colors.white),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 24.0),
-                        textStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-
-                    // Teléfono
-                    TextFormField(
-                      controller: telefonoController,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        labelText: 'Teléfono',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 12.0),
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            value.length != 10 ||
-                            !RegExp(r'^[0-9]+$').hasMatch(value)) {
-                          return 'Número de teléfono inválido';
-                        }
-                        return null;
-                      },
-                    ),
-                    Divider(thickness: 1, color: Colors.grey.shade300),
-
-                    // Cédula
-                    TextFormField(
-                      controller: cedulaController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: 'Cédula',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 12.0),
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            !RegExp(r'^[0-9]+$').hasMatch(value)) {
-                          return 'Cédula inválida';
-                        }
-                        return null;
-                      },
-                    ),
-                    Divider(thickness: 1, color: Colors.grey.shade300),
-
-                    // Referencia
-                    TextFormField(
-                      controller: referenciaController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: 'Referencia',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 12.0),
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            !RegExp(r'^[0-9]+$').hasMatch(value)) {
-                          return 'Referencia inválida';
-                        }
-                        return null;
-                      },
-                    ),
-
-                    Divider(thickness: 1, color: Colors.grey.shade300),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 16.0),
-                      child: Text(
-                        'Ingresa solo los últimos 6 digitos.',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    // Banco
-                    TextFormField(
-                      controller: bancoController,
-                      decoration: InputDecoration(
-                        labelText: 'Banco',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 12.0),
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Icon(Icons.arrow_drop_down),
-                        ),
-                      ),
-                      readOnly: true,
-                      onTap: () async {
-                        // Mostrar el listado de bancos con códigos
-                        String? selectedBanco =
-                            await showModalBottomSheet<String>(
-                          context: context,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(3),
+        return StatefulBuilder(
+          builder: (BuildContext context, setState) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.7,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+              ),
+                child: Scaffold(
+                body: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Container(
+                            margin: EdgeInsets.only(top: 5),
+                            width: 50,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(127, 127, 136, 0.988),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
                           ),
-                          builder: (context) {
-                            return ListView(
-                              children: bancos.entries.map((entry) {
-                                return ListTile(
-                                  title: Text('${entry.key} - ${entry.value}',
-                                      style: TextStyle(fontSize: 14)),
-                                  onTap: () {
-                                    Navigator.pop(context, entry.key);
-                                  },
-                                );
-                              }).toList(),
-                            );
-                          },
-                        );
-                        if (selectedBanco != null) {
-                          bancoController.text = selectedBanco;
-                        }
-                      },
-                    ),
-                    Divider(thickness: 1, color: Colors.grey.shade300),
-
-                    // Fecha de pago
-                    TextFormField(
-                      controller: fechaPagoController,
-                      keyboardType: TextInputType.datetime,
-                      decoration: InputDecoration(
-                        labelText: 'Fecha de Pago',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 12.0),
-                      ),
-                      onTap: () async {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-                        if (pickedDate != null) {
-                          String formattedDate =
-                              "${pickedDate.day.toString().padLeft(2, '0')}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.year}";
-                          fechaPagoController.text = formattedDate;
-                        }
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Fecha de pago requerida';
-                        }
-                        return null;
-                      },
-                    ),
-                    Divider(thickness: 1, color: Colors.grey.shade300),
-
-                    // Monto
-                    TextFormField(
-                      controller: montoController,
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        labelText: 'Monto',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 12.0),
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d*\.?\d*')),
-                      ],
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Monto es requerido';
-                        }
-                        return null;
-                      },
-                    ),
-                    Divider(thickness: 1, color: Colors.grey.shade300),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 16.0),
-                      child: Text(
-                        'Ingresa la cantidad con decimáles, por ejemplo 0.00.',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
                         ),
-                      ),
-                    ),
-
-                    // Botón de envío
-                    SizedBox(height: 24),
-                    Center(
-                      child: SizedBox(
-                        width: 250,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            // Validar campos antes de enviar
-                            if (referenciaController.text.isEmpty ||
-                                cedulaController.text.isEmpty ||
-                                bancoController.text.isEmpty ||
-                                telefonoController.text.isEmpty ||
-                                fechaPagoController.text.isEmpty ||
-                                montoController.text.isEmpty) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                content: Text(
-                                    'Por favor, complete todos los campos.'),
-                                backgroundColor: Colors.red,
-                              ));
-                              return;
-                            }
-
-                            String referencia = referenciaController.text;
-                            String cedula = cedulaController.text;
-                            String banco = bancoController.text;
-                            String telefono = telefonoController.text;
-                            String fechaPago = fechaPagoController.text;
-                            String monto = montoController.text;
-
-                            // Formatear la cédula y la fecha
-                            String formattedCedula =
-                                "V${cedula.replaceAll('-', '')}";
-
-                            // Fecha de inicio (fecha de pago)
-                            DateTime startDate = DateTime.parse(
-                                fechaPago.split('-').reversed.join('-'));
-
-                            // Fecha de fin (7 días después de la fecha de inicio)
-                            DateTime endDate = startDate.add(Duration(days: 7));
-
-                            // Formateo de las fechas en el formato correcto (yyyy-MM-dd)
-                            String formattedStartDate =
-                                "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}";
-                            String formattedEndDate =
-                                "${endDate.year.toString().padLeft(4, '0')}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}";
-
-                            String ipAddress = await _getIpAddress();
-
-                            Map<String, dynamic> response =
-                                await _agendarCitaPagoMovil(
-                              referencia: referencia,
-                              cedula: formattedCedula,
-                              banco: banco,
-                              telefono: telefono,
-                              amount: monto,
-                              startDate: formattedStartDate,
-                              endDate: formattedEndDate,
-                              ipAddress: ipAddress,
-                            );
-
-                            // Manejar la respuesta
-                            if (response['status'] == 'success') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text('Cita agendada exitosamente')));
-                              Navigator.pushNamed(context, '/citas');
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text('Error al agendar la cita')));
-                            }
+                        SizedBox(height: 10),
+                        Text(
+                          'Información de Pago',
+                          style:
+                              TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Teléfono:',
+                                  style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text('0424-2179421'),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Banco:',
+                                  style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text('Banesco'),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Documento:',
+                                  style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text('J-505271920'),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(
+                                text:
+                                    'Teléfono: 0424-2179421\nBanco: Banesco\nDocumento: J-505271920'));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text('Datos copiados al portapapeles')));
                           },
-                          child: Text('Enviar',
+                          child: Text('Copiar Datos',
                               style: TextStyle(color: Colors.white)),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromRGBO(0, 189, 206, 1),
@@ -1163,17 +983,405 @@ class _ProcesarCitaState extends State<ProcesarCita> {
                             ),
                           ),
                         ),
-                      ),
+                        SizedBox(height: 20),
+
+                        // Teléfono
+                        TextFormField(
+                          controller: telefonoController,
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            labelText: 'Teléfono',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 12.0),
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.length != 10 ||
+                                !RegExp(r'^[0-9]+$').hasMatch(value)) {
+                              return 'Número de teléfono inválido';
+                            }
+                            return null;
+                          },
+                        ),
+                        Divider(thickness: 1, color: Colors.grey.shade300),
+
+                        // Cédula
+                        TextFormField(
+                          controller: cedulaController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Cédula',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 12.0),
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          validator: (value) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !RegExp(r'^[0-9]+$').hasMatch(value)) {
+                              return 'Cédula inválida';
+                            }
+                            return null;
+                          },
+                        ),
+                        Divider(thickness: 1, color: Colors.grey.shade300),
+
+                        // Referencia
+                        TextFormField(
+                          controller: referenciaController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Referencia',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 12.0),
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(6),
+                          ],
+                          validator: (value) {
+                            if (value == null || value.isEmpty || value.length != 6) {
+                              return 'Referencia inválida (debe ser de 6 números)';
+                            }
+                            return null;
+                          },
+                        ),
+
+                        Divider(thickness: 1, color: Colors.grey.shade300),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 16.0),
+                          child: Text(
+                            'Ingresa solo los últimos 6 digitos.',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        // Banco
+                        TextFormField(
+                          controller: bancoController,
+                          decoration: InputDecoration(
+                            labelText: 'Banco',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 12.0),
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: Icon(Icons.arrow_drop_down),
+                            ),
+                          ),
+                          readOnly: true,
+                          onTap: () async {
+                            // Mostrar el listado de bancos con códigos
+                            String? selectedBanco =
+                                await showModalBottomSheet<String>(
+                              context: context,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                              builder: (context) {
+                                return ListView(
+                                  children: bancos.entries.map((entry) {
+                                    return ListTile(
+                                      title: Text('${entry.key} - ${entry.value}',
+                                          style: TextStyle(fontSize: 14)),
+                                      onTap: () {
+                                        Navigator.pop(context, entry.key);
+                                      },
+                                    );
+                                  }).toList(),
+                                );
+                              },
+                            );
+                            if (selectedBanco != null) {
+                              bancoController.text = selectedBanco;
+                            }
+                          },
+                        ),
+                        Divider(thickness: 1, color: Colors.grey.shade300),
+
+                        // Fecha de pago
+                        TextFormField(
+                          controller: fechaPagoController,
+                          keyboardType: TextInputType.datetime,
+                          decoration: InputDecoration(
+                            labelText: 'Fecha de Pago',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 12.0),
+                          ),
+                          onTap: () async {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2101),
+                            );
+                            if (pickedDate != null) {
+                              String formattedDate =
+                                  "${pickedDate.day.toString().padLeft(2, '0')}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.year}";
+                              fechaPagoController.text = formattedDate;
+                            }
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Fecha de pago requerida';
+                            }
+                            return null;
+                          },
+                        ),
+                        Divider(thickness: 1, color: Colors.grey.shade300),
+
+                        // Monto
+                        /*TextFormField(
+                          controller: montoController,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          decoration: InputDecoration(
+                            labelText: 'Monto',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 12.0),
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d*\.?\d*')),
+                          ],
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Monto es requerido';
+                            }
+                            return null;
+                          },
+                        ),*/
+
+                        TextFormField(
+                          controller: montoController,
+                          keyboardType: TextInputType.numberWithOptions(decimal: true),
+                          decoration: InputDecoration(
+                            labelText: 'Monto',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                            suffixIcon: errorDolar
+                                ? IconButton(
+                                    icon: Icon(Icons.refresh, color: Colors.red),
+                                    onPressed: () async {
+                                      obtenerDolar(montoController);
+                                    },
+                                  )
+                                : null,
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                          ],
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Monto es requerido';
+                            }
+                            return null;
+                          },
+                        ),
+
+                        Divider(thickness: 1, color: Colors.grey.shade300),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 16.0),
+                          child: Text(
+                            'Ingresa la cantidad con decimáles, por ejemplo 0.00',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.0, left: 16.0),
+                          child: Text(
+                              'Los precios son manjeados a tasa del BCV.',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+                        ),
+
+                        // Botón de envío
+                        SizedBox(height: 24),
+                        Center(
+                          child: SizedBox(
+                            width: 250,
+                            child: ElevatedButton(
+                              onPressed: () async {
+
+                                setState(() {
+                                  cargando = true;
+                                });
+
+                                if (referenciaController.text.isEmpty ||
+                                    cedulaController.text.isEmpty ||
+                                    bancoController.text.isEmpty ||
+                                    telefonoController.text.isEmpty ||
+                                    fechaPagoController.text.isEmpty ||
+                                    montoController.text.isEmpty) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                        'Por favor, complete todos los campos.'),
+                                    backgroundColor: Colors.red,
+                                  ));
+
+                                  setState(() {
+                                    cargando = false;
+                                  });
+
+                                  return;
+                                }
+
+                                String referencia = referenciaController.text;
+                                String cedula = cedulaController.text;
+                                String banco = bancoController.text;
+                                String telefono = telefonoController.text;
+                                String fechaPago = fechaPagoController.text;
+                                String monto = montoController.text;
+
+                                // Formatear la cédula y la fecha
+                                String formatoCedula =
+                                    "V${cedula.replaceAll('-', '')}";
+
+                                // Fecha de inicio (fecha de pago)
+                                DateTime startDate = DateTime.parse(
+                                    fechaPago.split('-').reversed.join('-'));
+
+                                // Fecha de fin (7 días después de la fecha de inicio)
+                                DateTime endDate = startDate.add(Duration(days: 7));
+
+                                // Formateo de las fechas en el formato correcto (yyyy-MM-dd)
+                                String formattedStartDate =
+                                    "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}";
+                                String formattedEndDate =
+                                    "${endDate.year.toString().padLeft(4, '0')}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}";
+
+                                String ipAddress = await _getIpAddress();
+
+                                Map<String, dynamic> response =
+                                    await _agendarCitaPagoMovil(
+                                  referencia: referencia,
+                                  cedula: formatoCedula,
+                                  banco: banco,
+                                  telefono: telefono,
+                                  amount: monto,
+                                  startDate: formattedStartDate,
+                                  endDate: formattedEndDate,
+                                  ipAddress: ipAddress,
+                                );
+
+                                
+                                // Manejar la respuesta
+                                /*if (response['status'] == 'success') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content:
+                                              Text('Cita agendada exitosamente')));
+                                  Navigator.pushNamed(context, '/citas');
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Error al agendar la cita')));
+                                }*/
+
+
+                                /*if (response['status'] == 'success') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Cita agendada exitosamente')),
+                                  );
+                                  Navigator.pushNamed(context, '/citas');
+                                } else {
+
+                                  String errorMensaje = response['message'];
+
+                                  if (response['details'] != null) {
+                                    errorMensaje += '\nDetalles: ${response['details']}';
+                                  }
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(errorMensaje)),
+                                  );
+                                }*/
+
+                                if (response['status'] == 'success') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Cita agendada exitosamente')),
+                                  );
+                                  Navigator.pushNamed(context, '/citas');
+                                } else {
+                                  String errorMensaje = response['message'];
+
+                                  // Si hay detalles, agregar al mensaje
+                                  if (response['details'] != null) {
+                                    errorMensaje += '\nDetalles: ${response['details']}';
+                                  }
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(errorMensaje)),
+                                  );
+                                }
+
+                                // Desactivar el estado de carga
+                                setState(() {
+                                  cargando = false;
+                                });
+                              },
+                              child: Text('Enviar',
+                                  style: TextStyle(color: Colors.white)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color.fromRGBO(0, 189, 206, 1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                  side: BorderSide(color: Colors.white),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 16.0, horizontal: 24.0),
+                                textStyle: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
+                floatingActionButton: cargando
+              ? Container(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    ),
+                  ),
+                )
+              : SizedBox.shrink(),
               ),
-            ),
-          ),
+            );
+          },
         );
-      },
+      }
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -1415,8 +1623,28 @@ class _ProcesarCitaState extends State<ProcesarCita> {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
+                        /*onPressed: () {
                           _ModalPagoMovil(context);
+                        },*/
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) {
+                              return ModalPagoMovil(
+                                costoCita: widget.costoCita,
+                                usuarioId: widget.usuarioId,
+                                idPsicologo: widget.idPsicologo,
+                                correo: widget.correo,
+                                direccion: widget.direccion,
+                                fechaSeleccionada: widget.fechaSeleccionada,
+                                horaSeleccionada: widget.horaSeleccionada,
+                                remota: widget.remota, // Pasar la variable remota
+                                calendarApi: widget.calendarApi, // Pasar la variable calendarApi
+                                descripcion: widget.descripcion, // Pasar la variable descripcion
+                              );
+                            },
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -1464,7 +1692,7 @@ class _ProcesarCitaState extends State<ProcesarCita> {
           ),
         ),
       ),
-      floatingActionButton: _isLoading
+      /*floatingActionButton: cargando
           ? Container(
               child: Center(
                 child: CircularProgressIndicator(
@@ -1472,7 +1700,7 @@ class _ProcesarCitaState extends State<ProcesarCita> {
                 ),
               ),
             )
-          : SizedBox.shrink(),
+          : SizedBox.shrink(),*/
     );
   }
 }

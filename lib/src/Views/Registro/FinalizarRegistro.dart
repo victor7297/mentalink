@@ -37,6 +37,8 @@ class _FinalizarRegistroState extends State<FinalizarRegistro> {
 
   List<String> opcionesGenero = ['Masculino', 'Femenino', 'Otro'];
 
+  bool cargando = false;
+
   @override
   void initState() {
     super.initState();
@@ -484,7 +486,7 @@ class _FinalizarRegistroState extends State<FinalizarRegistro> {
     );
   }
 
-  Future<void> _registro() async {
+  /*Future<void> _registro() async {
     if (!Terminos) {
       // Mostrar un mensaje de error si no se han aceptado los términos
       showDialog(
@@ -585,7 +587,96 @@ class _FinalizarRegistroState extends State<FinalizarRegistro> {
         },
       );
     }
+  }*/
+
+  Future<bool> _registro() async {
+    if (!Terminos) {
+      // Mostrar un mensaje de error si no se han aceptado los términos
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(
+                "Debes aceptar los Términos y Condiciones para continuar."),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text('Aceptar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return false;  // Devolvemos false si no se aceptan los términos.
+    }
+
+    try {
+      dynamic registro = await Servicio().registrarUsuario({
+        "nombre": widget.nombre,
+        "apellido": widget.apellido,
+        "correo": widget.correo,
+        "telefono": _telefonoController.text,
+        "contrasena": widget.contrasena,
+        "genero": _selectedSexo ?? "",
+        "fecha_nacimiento":
+            "${selecionnarHora.year}-${selecionnarHora.month}-${selecionnarHora.day}",
+        "pais": _selectedCountry?.name,
+        "perfil_id": "5",
+        "terminos_condiciones": "true"
+      });
+
+      String status = registro['status'];
+
+      if (status == "success") {
+        // Si el registro es exitoso, devolvemos true.
+        return true;
+      } else {
+        // Si hubo un error en el registro, mostramos un mensaje y devolvemos false.
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(registro['message'] ?? registro['error']['text']),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: Text('Aceptar'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return false;
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(
+                "Ha ocurrido un error al procesar la solicitud. Inténtelo de nuevo más tarde."),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text('Aceptar'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return false;
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -870,7 +961,7 @@ class _FinalizarRegistroState extends State<FinalizarRegistro> {
                   ),
                 ),
                 SizedBox(height: 20.0),
-                Container(
+                /*Container(
                   margin: EdgeInsets.only(bottom: 15),
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
@@ -893,7 +984,104 @@ class _FinalizarRegistroState extends State<FinalizarRegistro> {
                       ),
                     ),
                   ),
+                ),*/
+
+                Container(
+                  margin: EdgeInsets.only(bottom: 15),
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: cargando
+                      ? Container(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(color: Colors.blue),
+                        )
+                      : ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              cargando = true;
+                            });
+
+                            bool registroExitoso = await _registro();
+
+                            if (!registroExitoso) {
+                              setState(() {
+                                cargando = false;
+                              });
+                              return;
+                            }
+
+                            Map<String, dynamic> data = {
+                              'correo': widget.correo,
+                            };
+
+                            var respuesta = await Servicio().enviarCorreoCodigo(data);
+
+                            setState(() {
+                              cargando = false;
+                            });
+
+                            if (respuesta['status'] == 'success') {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    respuesta['message'],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  backgroundColor: Color.fromARGB(255, 0, 188, 207),
+                                ),
+                              );
+
+                              Navigator.pushNamed(
+                                context,
+                                '/VerificarCorreo',
+                                arguments: {
+                                  'nombre': widget.nombre,
+                                  'apellido': widget.apellido,
+                                  'correo': widget.correo,
+                                  'contrasena': widget.contrasena,
+                                },
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    respuesta['message'] ?? 'Error al enviar el código de verificación',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
+                            backgroundColor: Color.fromARGB(255, 0, 188, 207),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(width: 2.0, color: Colors.white),
+                            ),
+                            elevation: 5,
+                          ),
+                          child: Text(
+                            'Finalizar Registro',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                 ),
+
+
+
                 SizedBox(height: 20),
                 Container(
                   margin: EdgeInsets.only(top: 40),

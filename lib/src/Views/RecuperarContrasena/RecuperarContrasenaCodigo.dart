@@ -16,13 +16,13 @@ class RecuperarContrasenaCodigo extends StatefulWidget {
 
 class _RecuperarContrasenaCodigoState extends State<RecuperarContrasenaCodigo> {
 
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _contrasenaController = TextEditingController();
 
   late List<TextEditingController> _controllers;
 
   bool _passwordValid = true;
-  bool _passwordVisible = false;
-  bool loading = false;
+  bool _mostrarContrasena = false;
+  bool cargando = false;
 
   @override
   void initState() {
@@ -124,8 +124,8 @@ class _RecuperarContrasenaCodigoState extends State<RecuperarContrasenaCodigo> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: TextFormField(
-                    controller: _passwordController,
-                    obscureText: !_passwordVisible,
+                    controller: _contrasenaController,
+                    obscureText: !_mostrarContrasena,
                     onChanged: (value) {
                       setState(() {
                         _passwordValid = value.isNotEmpty &&
@@ -150,14 +150,14 @@ class _RecuperarContrasenaCodigoState extends State<RecuperarContrasenaCodigo> {
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _passwordVisible
+                          _mostrarContrasena
                               ? Icons.visibility
                               : Icons.visibility_off,
                           color: Colors.grey,
                         ),
                         onPressed: () {
                           setState(() {
-                            _passwordVisible = !_passwordVisible;
+                            _mostrarContrasena = !_mostrarContrasena;
                           });
                         },
                       ),
@@ -184,7 +184,7 @@ class _RecuperarContrasenaCodigoState extends State<RecuperarContrasenaCodigo> {
 
                 SizedBox(height: 20.0),
 
-                loading ? Container(child: CircularProgressIndicator(color: Colors.blue,),): Container(),
+                cargando ? Container(child: CircularProgressIndicator(color: Colors.blue,),): Container(),
 
                 Container(
 
@@ -205,20 +205,20 @@ class _RecuperarContrasenaCodigoState extends State<RecuperarContrasenaCodigo> {
 
                       };
 
-                      if(_passwordController.text != "" && codigo != ""){
+                      if(_contrasenaController.text != "" && codigo != ""){
 
-                        if (exp.hasMatch(_passwordController.text)) {
+                        if (exp.hasMatch(_contrasenaController.text)) {
 
                           setState(() {
-                            loading = true;
+                            cargando = true;
                           });
 
                           Map<String, dynamic> data = {
 
                             "correo": widget.correo,
                             "codigo_recuperacion": codigo,
-                            "nueva_contrasena": _passwordController.text,
-                            "confirmacion_contrasena": _passwordController.text
+                            "nueva_contrasena": _contrasenaController.text,
+                            "confirmacion_contrasena": _contrasenaController.text
                           };
 
                           var respuesta = await Servicio().actualizarPassword(data);
@@ -226,7 +226,7 @@ class _RecuperarContrasenaCodigoState extends State<RecuperarContrasenaCodigo> {
                           if(respuesta['status'] == "success"){
 
                             setState(() {
-                              loading = false;
+                              cargando = false;
                             });
 
                             final snackBar = SnackBar(
@@ -254,7 +254,7 @@ class _RecuperarContrasenaCodigoState extends State<RecuperarContrasenaCodigo> {
                           else{
 
                             setState(() {
-                              loading = false;
+                              cargando = false;
                             });
 
                             final snackBar = SnackBar(

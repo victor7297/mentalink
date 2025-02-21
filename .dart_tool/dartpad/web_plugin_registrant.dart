@@ -7,6 +7,7 @@
 // ignore_for_file: type=lint
 
 import 'package:flutter_custom_tabs_web/flutter_custom_tabs_web.dart';
+import 'package:flutter_inappwebview_web/web/main.dart';
 import 'package:flutter_localization/flutter_localization_web.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 void registerPlugins([final Registrar? pluginRegistrar]) {
   final Registrar registrar = pluginRegistrar ?? webPluginRegistrar;
   CustomTabsPluginWeb.registerWith(registrar);
+  InAppWebViewFlutterPlugin.registerWith(registrar);
   FlutterLocalizationWeb.registerWith(registrar);
   GoogleSignInPlugin.registerWith(registrar);
   ImagePickerPlugin.registerWith(registrar);

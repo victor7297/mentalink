@@ -25,30 +25,25 @@ class _RegistroParte12State extends State<RegistroParte1> {
   bool _emailValido = true;
   bool _passwordValid = true;
   bool _passwordVisible = false;
+  bool cargando = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Container(
-
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage("https://mentalink.org/assets/images/fondo.jpg"),
+            image:
+                NetworkImage("https://mentalink.org/assets/images/fondo.jpg"),
             fit: BoxFit.cover,
           ),
         ),
-
         child: Center(
-          
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-
               children: [
-
                 Container(
                   padding: EdgeInsets.all(20),
                   width: 260,
@@ -57,7 +52,6 @@ class _RegistroParte12State extends State<RegistroParte1> {
                     fit: BoxFit.cover,
                   ),
                 ),
-
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: TextFormField(
@@ -65,7 +59,8 @@ class _RegistroParte12State extends State<RegistroParte1> {
                     onChanged: (value) {
                       setState(() {
                         _nombreValido = value.isEmpty ||
-                            RegExp(r'^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$').hasMatch(value);
+                            RegExp(r'^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$')
+                                .hasMatch(value);
                       });
                     },
                     decoration: InputDecoration(
@@ -88,9 +83,7 @@ class _RegistroParte12State extends State<RegistroParte1> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-
                 SizedBox(height: 3),
-
                 if (!_nombreValido && _nombreController.text.isNotEmpty)
                   Align(
                     alignment: Alignment.centerLeft,
@@ -105,9 +98,7 @@ class _RegistroParte12State extends State<RegistroParte1> {
                       ),
                     ),
                   ),
-
                 SizedBox(height: 20.0),
-
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: TextFormField(
@@ -115,7 +106,8 @@ class _RegistroParte12State extends State<RegistroParte1> {
                     onChanged: (value) {
                       setState(() {
                         _apellidoValido = value.isEmpty ||
-                            RegExp(r'^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$').hasMatch(value);
+                            RegExp(r'^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$')
+                                .hasMatch(value);
                       });
                     },
                     decoration: InputDecoration(
@@ -138,7 +130,6 @@ class _RegistroParte12State extends State<RegistroParte1> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-
                 if (!_apellidoValido && _apellidoController.text.isNotEmpty)
                   Align(
                     alignment: Alignment.centerLeft,
@@ -153,9 +144,7 @@ class _RegistroParte12State extends State<RegistroParte1> {
                       ),
                     ),
                   ),
-
                 SizedBox(height: 20.0),
-
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: TextFormField(
@@ -187,7 +176,6 @@ class _RegistroParte12State extends State<RegistroParte1> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-
                 if (!_emailValido && _emailController.text.isNotEmpty)
                   Align(
                     alignment: Alignment.centerLeft,
@@ -202,9 +190,7 @@ class _RegistroParte12State extends State<RegistroParte1> {
                       ),
                     ),
                   ),
-
                 SizedBox(height: 20.0),
-
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: TextFormField(
@@ -250,7 +236,6 @@ class _RegistroParte12State extends State<RegistroParte1> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-
                 if (!_passwordValid)
                   Align(
                     alignment: Alignment.centerLeft,
@@ -265,102 +250,155 @@ class _RegistroParte12State extends State<RegistroParte1> {
                       ),
                     ),
                   ),
-
                 SizedBox(height: 20.0),
-
                 Container(
                   margin: EdgeInsets.only(bottom: 15),
                   width: MediaQuery.of(context).size.width * 0.7,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      String nombre = _nombreController.text;
-                      String apellido = _apellidoController.text;
-                      String correo = _emailController.text;
-                      String contrasena = _passwordController.text;
+                  child: cargando
+                      ? Container(
+                          alignment: Alignment.center,
+                          child: CircularProgressIndicator(color: Colors.blue),
+                        )
+                      : ElevatedButton(
+                          onPressed: () async {
+                            String nombre = _nombreController.text;
+                            String apellido = _apellidoController.text;
+                            String correo = _emailController.text;
+                            String contrasena = _passwordController.text;
 
-                      bool camposVacios = false;
+                            bool camposVacios = false;
 
-                      if (_nombreController.text.isEmpty) {
-                        camposVacios = true;
-                      }
-                      if (_apellidoController.text.isEmpty) {
-                        camposVacios = true;
-                      }
-                      if (_emailController.text.isEmpty) {
-                        camposVacios = true;
-                      }
-                      if (_passwordController.text.isEmpty) {
-                        camposVacios = true;
-                      }
+                            // Validación de campos vacíos
+                            if (_nombreController.text.isEmpty) {
+                              camposVacios = true;
+                            }
+                            if (_apellidoController.text.isEmpty) {
+                              camposVacios = true;
+                            }
+                            if (_emailController.text.isEmpty) {
+                              camposVacios = true;
+                            }
+                            if (_passwordController.text.isEmpty) {
+                              camposVacios = true;
+                            }
 
-                      if (camposVacios) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              '¡Complete Todos Los Campos!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            if (camposVacios) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '¡Complete Todos Los Campos!',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      Color.fromARGB(255, 0, 188, 207),
+                                ),
+                              );
+                            } else {
+                              setState(() {
+                                _nombreValido = RegExp(r'^[a-zA-Z\s]+$')
+                                    .hasMatch(_nombreController.text);
+                                _apellidoValido = RegExp(r'^[a-zA-Z\s]+$')
+                                    .hasMatch(_apellidoController.text);
+                                _emailValido =
+                                    RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                        .hasMatch(_emailController.text);
+                                _passwordValid =
+                                    _passwordController.text.isNotEmpty &&
+                                        _passwordController.text
+                                            .contains(RegExp(r'[A-Z]')) &&
+                                        _passwordController.text
+                                            .contains(RegExp(r'[0-9]'));
+                              });
+
+                              if (_nombreValido &&
+                                  _apellidoValido &&
+                                  _emailValido &&
+                                  _passwordValid) {
+                                // Cambiar el estado a cargando
+                                /*setState(() {
+                                  cargando = true;
+                                });
+
+                                Map<String, dynamic> data = {
+                                  'correo': correo,
+                                };
+
+                                var respuesta =
+                                    await Servicio().enviarCorreoCodigo(data);
+
+                                // Después de la respuesta, cambiar el estado a no cargando
+                                setState(() {
+                                  cargando = false;
+                                });
+
+                                if (respuesta['status'] == 'success') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        respuesta['message'],
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 0, 188, 207),
+                                    ),
+                                  );*/
+
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/FinalizarRegistro',
+                                    arguments: {
+                                      'nombre': nombre,
+                                      'apellido': apellido,
+                                      'correo': correo,
+                                      'contrasena': contrasena,
+                                    },
+                                  );
+                                /*} else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        respuesta['message'] ??
+                                            'Error al enviar el código de verificación',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }*/
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
                             backgroundColor: Color.fromARGB(255, 0, 188, 207),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(width: 2.0, color: Colors.white),
+                            ),
+                            elevation: 5,
                           ),
-                        );
-                      } else {
-                        setState(() {
-                          _nombreValido = RegExp(r'^[a-zA-Z\s]+$')
-                              .hasMatch(_nombreController.text);
-                          _apellidoValido = RegExp(r'^[a-zA-Z\s]+$')
-                              .hasMatch(_apellidoController.text);
-                          _emailValido =
-                              RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                                  .hasMatch(_emailController.text);
-                          _passwordValid =
-                              _passwordController.text.isNotEmpty &&
-                                  _passwordController.text
-                                      .contains(RegExp(r'[A-Z]')) &&
-                                  _passwordController.text
-                                      .contains(RegExp(r'[0-9]'));
-                        });
-
-                        if (_nombreValido &&
-                            _apellidoValido &&
-                            _emailValido &&
-                            _passwordValid) {
-                          Navigator.pushNamed(
-                            context,
-                            '/FinalizarRegistro',
-                            arguments: {
-                              'nombre': nombre,
-                              'apellido': apellido,
-                              'correo': correo,
-                              'contrasena': contrasena,
-                            },
-                          );
-                        }
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      backgroundColor: Color.fromARGB(255, 0, 188, 207),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: BorderSide(width: 2.0, color: Colors.white),
-                      ),
-                      elevation: 5,
-                    ),
-                    child: Text(
-                      'Crear una cuenta',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                          child: Text(
+                            'Crear una cuenta',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                 ),
-
                 Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -381,32 +419,27 @@ class _RegistroParte12State extends State<RegistroParte1> {
                   width: MediaQuery.of(context).size.width * 0.7,
                   //margin: EdgeInsets.only(top: 20),
                   child: ElevatedButton(
-                    onPressed: () async{
-
-                      try{
-
+                    onPressed: () async {
+                      try {
                         final user = await gmail.login();
 
-                        final GoogleSignInAuthentication googleAuth = await user!.authentication;
+                        final GoogleSignInAuthentication googleAuth =
+                            await user!.authentication;
 
-                        Map<String,dynamic> data = {
-                          "correo": user.email
-                        };
+                        Map<String, dynamic> data = {"correo": user.email};
 
                         data = await Servicio().verificarCorreo(data);
 
-                        if(data['status'] != "success"){
-
+                        if (data['status'] != "success") {
                           await gmail.disconnect();
 
-                          Navigator.of(context).pushNamed("/RegistroGoogle",
+                          Navigator.of(context).pushNamed(
+                            "/RegistroGoogle",
                             arguments: {
                               'correo': user.email,
                             },
                           );
-                        }
-                        else{
-
+                        } else {
                           final snackBar = SnackBar(
                             content: Text(
                               'Correo ya Registrado.',
@@ -423,15 +456,11 @@ class _RegistroParte12State extends State<RegistroParte1> {
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
                           await gmail.disconnect();
-
                         }
-
-                      }
-                      catch(e){
+                      } catch (e) {
                         print(e);
                         await gmail.disconnect();
                       }
-
                     },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -456,18 +485,13 @@ class _RegistroParte12State extends State<RegistroParte1> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors
-                                .white,
+                            color: Colors.white,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-
-
-
-
                 GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, '/login');
@@ -482,9 +506,7 @@ class _RegistroParte12State extends State<RegistroParte1> {
                     ),
                   ),
                 ),
-
                 SizedBox(height: 20),
-
               ],
             ),
           ),

@@ -5,6 +5,7 @@ import 'package:mentalink/src/Views/ActualizarPassword/actualizarPassword.dart';
 import 'package:mentalink/src/Views/CitasPsicologo/CitasPsicologo.dart';
 import 'package:mentalink/src/Views/Psicologos/testEvaluativo.dart';
 import 'package:mentalink/src/Views/Registro/RegistroGoogle.dart';
+import 'package:mentalink/src/Views/Registro/VerificarCorreo.dart';
 import 'package:mentalink/src/Views/TestAnsiedad/TestAnsiedad.dart';
 import 'package:mentalink/src/Views/TestAsertividad/TestAsertividad.dart';
 import 'package:mentalink/src/Views/TestBDI/TestBDI.dart';
@@ -59,9 +60,18 @@ class MyApp extends StatelessWidget {
         "/": (BuildContext context) => Inicio(),
         "/RegistroParte1": (BuildContext context) => RegistroParte1(),
         '/FinalizarRegistro': (BuildContext context) {
-          final Map<String, String> args =
-              ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+          final Map<String, String> args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
           return FinalizarRegistro(
+            nombre: args['nombre']!,
+            apellido: args['apellido']!,
+            correo: args['correo']!,
+            contrasena: args['contrasena']!,
+          );
+        },
+        "/VerificarCorreo": (BuildContext context) {
+          final Map<String, String> args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+          
+          return VerificarCorreo(
             nombre: args['nombre']!,
             apellido: args['apellido']!,
             correo: args['correo']!,
@@ -90,7 +100,7 @@ class MyApp extends StatelessWidget {
         "/testdesesperanza":(BuildContext context) => TestDesesperanza(),
         "/testlaboral":(BuildContext context) => TestLaboral(),
         "/actualizarPassword":(BuildContext context) => ActualizarPassword(),
-        "/RegistroGoogle":(BuildContext context) => RegistroGoogle()
+        "/RegistroGoogle":(BuildContext context) => RegistroGoogle(),
       },
     );
   }

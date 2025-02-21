@@ -72,9 +72,8 @@ class _TestBDIState extends State<TestBDI> {
 
   Future<void> _cargarRespuestas() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    usuarioId = prefs.getString('usuario_id') ?? "0"; // Asegúrate de que usuarioId sea una cadena no vacía
+    usuarioId = prefs.getString('usuario_id') ?? "0";
 
-    // Llamar al método TestBDIRespuestas con el ID del usuario
     var resultado = await Servicio().TestBDIRespuestas(int.tryParse(usuarioId) ?? 0);
 
     final respuestasProcesadas = <int, int?>{};
@@ -84,11 +83,12 @@ class _TestBDIState extends State<TestBDI> {
         final key = 'p${i + 1}_$j';
         final respuesta = resultado[key];
         if (respuesta != null && respuesta == '1') {
-          respuestasProcesadas[i] = j + 1;
-          break; // Solo necesitamos la primera respuesta '1' para esta pregunta
+          respuestasProcesadas[i] = j;
+          break;
         }
       }
     }
+
 
     setState(() {
       respuestas.addAll(respuestasProcesadas);
@@ -231,7 +231,7 @@ class _TestBDIState extends State<TestBDI> {
               index,
               RadioListTile<int>(
                 title: Text(opcion),
-                value: index + 1,
+                value: index,
                 groupValue: respuestas[preguntaIndex],
                 onChanged: (value) {
                   if (value != null) {
@@ -248,6 +248,7 @@ class _TestBDIState extends State<TestBDI> {
         .values
         .toList();
   }
+
 
   void Submit() {
     final paginaActualIndex = paginaController.page?.round() ?? 0;

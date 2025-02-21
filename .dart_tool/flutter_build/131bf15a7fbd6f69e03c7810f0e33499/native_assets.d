@@ -1,0 +1,1 @@
+ /Users/designdev/Desktop/Proyectos\ Flutter/mentalink/.dart_tool/flutter_build/131bf15a7fbd6f69e03c7810f0e33499/native_assets.yaml: 
